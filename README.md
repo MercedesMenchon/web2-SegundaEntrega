@@ -149,10 +149,10 @@ http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students?column=curso&filt
 ## Errores
 Los errores con los que se puede encontrar en la API serán:
 
-### Status	    Código de error	                       
- 400     	   “Bad request”	          
- 404	       “Not found”                     	
- 500 	       “Internal server error”	    
+| Status | Código de error |	                       
+| 400 | “Bad request” |	          
+| 404 | “Not found” |                    	
+| 500 | “Internal server error” |	    
 
 
 
