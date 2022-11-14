@@ -90,22 +90,27 @@ Por ejemplo:
 
 ## Parámetros
 
-* column = Indica la columna por la que se filtrarán los datos.
-* filtervalue = Indica el valor por el cual se filtrará.
-* orderBy = Indica la columna por la cual se ordenaran los datos.
-* order = Indica el tipo de ordenamiento asc o desc.
-* page = Página que se quiere observar.
-* limit = Indica la cantidad registros que se mostrarán por página.
+|Parámetro | Descripción |
+| ------------ | ------------|
+| column | Indica la columna por la que se filtrarán los datos.|
+| filtervalue | Indica el valor por el cual se filtrará.|
+| orderBy | Indica la columna por la cual se ordenaran los datos.|
+| order | Indica el tipo de ordenamiento asc o desc.|
+| page | Página que se quiere observar.|
+| limit | Indica la cantidad registros que se mostrarán por página.|
 
 
 
 ## Parámetros por defecto
 
 En el caso de omitir parámetros en las consultas, por defecto se ejecutaran de la siguiente manera:
-* orderBy = ndni
-* order = desc
-* limit =20
-* page =1
+
+|Parámetro | Valor por defecto |
+|-------- |-----------|
+| orderBy | ndni |
+| order | desc |
+| limit | 20 |
+| page | 1 |
 
 Es decir, se mostraran los primeros 20 estudiantes pertenecientes a la base de datos ordenados de manera descendente considerando su ndni.
 
