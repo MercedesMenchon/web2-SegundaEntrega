@@ -24,8 +24,9 @@ http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students
 http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students/:ID
 
 
-### Request	           Método	                Endpoint	                                             Status
-Obtener estudiantes	    GET	        http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students	       200
+|Request| Método| Endpoint|Status|
+|------|------|-----------------------------------|------|
+Obtener estudiantes| GET| http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students| 200 |
 Obtener estudiante	    GET	        http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students/:ID	   200
 Crear estudiante	    POST	    http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students	       201
 Editar estudiante	    PUT	        http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students/:ID     201
