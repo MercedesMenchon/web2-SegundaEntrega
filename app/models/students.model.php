@@ -14,29 +14,19 @@ class StudentsModel {
        
         $params = []; 
 
-        $querySentence = "SELECT * FROM estudiantes ";
         
+        $offset = $page * $limit - $limit;
+        
+        $querySentence = "SELECT * FROM estudiantes ";
+
         if($column != null){
             //aca tengo que ver si el $filter
-            $querySentence .= " WHERE  $column = ?";
-            array_push($params, $filtervalue);
+            $querySentence .= " WHERE  $column LIKE ? ";
+            array_push($params, "$filtervalue%");
         }
 
-        if($orderBy != null){
-            $querySentence .= "ORDER BY $orderBy";
-        }
-        if($order != null){
-            $querySentence .= " $order";
-        }
-       //Si no indico el page, es cero. Si lo indico continuo para obtener eloffset
-        if($page == null){
-            $page=0;
-        }
+        $querySentence .= "ORDER BY $orderBy $order LIMIT $limit OFFSET $offset";
 
-        if($limit != null){
-            $offset = $page * $limit - $limit;
-            $querySentence .= " LIMIT  $limit OFFSET $offset";
-        }
 
         $query = $this->db->prepare($querySentence);
         $query->execute($params);
@@ -44,54 +34,28 @@ class StudentsModel {
         return $students;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function get($id){
-        $query = $this->db->prepare('SELECT * FROM estudiantes WHERE NDNI = ?');
+        $query = $this->db->prepare('SELECT * FROM estudiantes WHERE ndni = ?');
         $query->execute([$id]);
         return $query->fetch(PDO::FETCH_OBJ);
     }
 
-
     public function removeStudent($id) {
-        $query = $this->db->prepare('DELETE FROM estudiantes WHERE NDNI = ?');
+        $query = $this->db->prepare('DELETE FROM estudiantes WHERE ndni = ?');
         $query->execute([$id]);
     }
 
-   
-  
-
-
-    public function insert($NDNI,$Nombre,$Direccion,$Telefono,$Curso,$Division){
+       public function insert($ndni,$nombre,$direccion,$telefono,$curso,$division){
        
-        $query=$this->db->prepare('INSERT INTO `estudiantes` (`NDNI`,`Nombre`,`Direccion`,`Telefono`,`Curso`, `Division`) VALUES (?,?,?,?,?,?)');
-        $query->execute([$NDNI , $Nombre, $Direccion, $Telefono ,$Curso ,$Division]);
+        $query=$this->db->prepare('INSERT INTO `estudiantes` (`ndni`,`nombre`,`direccion`,`telefono`,`curso`, `division`) VALUES (?,?,?,?,?,?)');
+        $query->execute([$ndni , $nombre, $direccion, $telefono ,$curso ,$division]);
  
         return $this->db->lastInsertId();  
     }
     
-
+    public function editar($NDNIEditar,$NDNI,$Nombre,$Direccion,$Telefono,$Curso,$Division){
+        $query=$this->db->prepare('UPDATE estudiantes SET `ndni`=?, `nombre`=? ,`direccion`=? ,`telefono`=? ,`curso`=?, `division`=? WHERE `ndni` = ?');
+        $query->execute([$NDNI,$Nombre,$Direccion,$Telefono,$Curso,$Division,$NDNIEditar]);
+            
+        }
 }

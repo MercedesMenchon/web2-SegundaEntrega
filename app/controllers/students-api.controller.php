@@ -2,15 +2,18 @@
 require_once './app/models/students.model.php';
 require_once './app/views/api.view.php';
 
+
 class StudentsApiController {
     private $model;
     private $view;
+ 
 
     private $data;
 
     public function __construct() {
         $this->model = new StudentsModel();
         $this->view = new ApiView();
+       
         
         //lee el body del request
         $this->data = file_get_contents("php://input");
@@ -22,30 +25,39 @@ class StudentsApiController {
       return json_decode($this->data);
    }
 
-   private function validate($column, $orderBy, $order, $limit, $page){
+   private function validate($column,$filtervalue, $orderBy, $order, $limit, $page){
+    
     $columns = ["ndni","nombre","direccion","telefono","curso" ];
 
-    if(isset($column) & !in_array(strtolower($column), $columns)){
-     $this->view->response("No se encontraron la columna indicada para la condición", 400);
+    if(isset($column) && !in_array(strtolower($column), $columns)){
+     
+     $this->view->response("No se encontro la columna indicada para la condición", 400);
        die();
     }
+    else{
+      if(isset($filtervalue)  && empty($filtervalue)) {
+    $this->view->response("Debe definir un valor para el filterValue", 400);
+    die();
+      }
+    }
     
-    if(isset($orderBy) & !in_array(strtolower($orderBy), $columns)){
-      $this->view->response("No se encontraron la columna indicada para orderBy", 400);
+    
+    if(isset($orderBy) && !in_array(strtolower($orderBy), $columns)){
+      $this->view->response("No se encontro la columna indicada para orderBy", 400);
       die();
     }
  
     $orders=["asc","desc"];
-    if(isset($order) & !in_array(strtolower($order), $orders)){
+    if(isset($order) && !in_array(strtolower($order), $orders)){
       $this->view->response("No se puede ordenar de laforma indicada", 400);
       die();
     }
-    if ((isset($page)) & is_numeric($page) & $page >= 0){
-      return $this->view->response("No se puede mostrar la página indicada", 400);
+     if ((isset($page)) && (!is_numeric($page) || $page <= 0))  {
+      $this->view->response("No se puede mostrar la página indicada", 400);
       die();
     }
-    if ((isset($limit)) & is_numeric($limit) & $limit >= 0){
-      return $this->view->response("No se puede mostrar el limite indicado", 400);
+    if ((isset($limit)) && (!is_numeric($limit) || $limit <= 0)){
+      $this->view->response("No se puede mostrar el limite indicado", 400);
       die();
     }
 
@@ -53,30 +65,32 @@ class StudentsApiController {
 
     public function getAll($params = null)
     {
+      
       try{
       $column =  $_GET["column"]?? null;  
       $filtervalue = $_GET["filtervalue"] ?? null;
       $orderBy = $_GET["orderBy"] ?? "ndni";
       $order = $_GET["order"] ?? "desc";
-      $limit = $_GET["limit"] ?? null;
-      $page =  $_GET["page"] ?? null;
+      $limit = $_GET["limit"] ?? 20;
+      $page =  $_GET["page"] ?? 1;
       
-     $this->validate($column, $orderBy, $order, $limit, $page);
-     
+  $this->validate($column,$filtervalue, $orderBy, $order, $limit, $page);
 
-    $students = $this->model->getAll($column, $filtervalue, $orderBy, $order, $limit, $page);
+  $students = $this->model->getAll($column, $filtervalue, $orderBy, $order, $limit, $page);
 
+   
 if($students)
-    return $this->view->response($students, 200);
+ return $this->view->response($students, 200);
 else
-    $this->view->response("No se encontraron estudiantes", 404);
+$this->view->response("No es posible hacer realizar la busqueda", 404);
 }
-    catch(Exception $e){
-      var_dump($e);
-
-    }
-
+catch (Exception $e) {
+  $this->view->response($e->getMessage(), 500);
   }
+  
+  }
+
+
     public function get($params = null)
     {
       $id = $params[':ID'];
@@ -91,6 +105,8 @@ else
 
   public function removeStudent($params = null){
     $id = $params[':ID'];
+
+
     $student =$this->model->get($id);
 
     if (!(empty($student))){
@@ -106,19 +122,45 @@ else
   public function insertStudent($params = null){
  $student=$this->getData();
 
- if (empty($student->NDNI) || empty($student->Nombre) || empty($student->Direccion)|| empty($student->Telefono)|| empty($student->Curso)|| empty($student->Division)) {
+ 
+ if (empty($student->ndni) || empty($student->nombre) || empty($student->direccion)|| empty($student->telefono)|| empty($student->curso)|| empty($student->division)) {
   $this->view->response("Los datos no se encuentran completos", 400);
 } else {
-if(empty($this->model->get($student->NDNI))){
-  $this->model->insert($student->NDNI, $student->Nombre, $student->Direccion,$student->Telefono,$student->Curso,$student->Division);
-  $added = $this->model->get($student->NDNI);
-
+if(empty($this->model->get($student->ndni))){
+  $this->model->insert($student->ndni, $student->nombre, $student->direccion,$student->telefono,$student->curso,$student->division);
+  $added = $this->model->get($student->ndni);
   $this->view->response($added, 201);
 }
 else{
   $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI", 400);
 }
 }
+
+  }
+
+
+public function editStudent($params = null){
+  $id = $params[':ID'];
+  $student=$this->getData();
+ 
+if($this->model->get($id)){
+  if (empty($student->ndni) || empty($student->nombre) || empty($student->direccion)|| empty($student->telefono)|| empty($student->curso)|| empty($student->division)) {
+   $this->view->response("Los datos no se encuentran completos", 400);
+ } 
+ else {
+ if( ($student->ndni) == $id || empty($this->model->get($student->ndni))){
+   $this->model->editar($id,$student->ndni, $student->nombre, $student->direccion,$student->telefono,$student->curso,$student->division);
+   $edit = $this->model->get($student->ndni);
+   $this->view->response($edit, 201);
+ }
+ else{
+  $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI", 400);
+ }
+}
+}
+ else{
+   $this->view->response("No se encuentra un estudiante con el ndni indicado para editar", 400);
+ }
 
 
 }
