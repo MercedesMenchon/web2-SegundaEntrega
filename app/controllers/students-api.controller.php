@@ -84,7 +84,8 @@ class StudentsApiController
       if ($students) {
         $this->view->response($students, 200);
       } else {
-        $this->view->response("No se encontraron estudiantes", 204);
+        $this->view->response("No se encontraron estudiantes.", 204);
+        $this->view->response("Puede realizar una nueva busqueda.", 205);
       }
     } catch (Exception $e) {
       $this->view->response($e->getMessage(), 500);

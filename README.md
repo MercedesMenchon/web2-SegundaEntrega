@@ -88,6 +88,12 @@ Por ejemplo:
     "division": "B"
 }
 
+## DELETE Eliminar estudiante
+
+ http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students/:ID
+
+Eliminar un estudiante de la base de datos.
+
 ## Parámetros
 
 |Parámetro | Descripción |
@@ -153,10 +159,11 @@ Las respuestas con los que se puede encontrar en la API serán:
 |200| “OK”|
 |201| “Created”|
 |204| “No content”|
+|205|“Reset Content”|
 | 400 | “Bad request” |	          
 | 404 | “Not found” |                    	
 | 500 | “Internal server error” |	    
 
-
+Observación: El código 205 se mostraráinmediatamente despues del código 204, con la finalidad de restablecer la vista del documento.
 
 
