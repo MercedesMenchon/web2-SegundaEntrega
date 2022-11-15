@@ -150,9 +150,9 @@ Las respuestas con los que se puede encontrar en la API serán:
 
 | Status | Código |	
 |--------|--------------|      
-|200| | "OK"|
-|201| | "Created"|
-|204| "No content"|
+|200| | “OK”|
+|201| | “Created”|
+|204| “No content”|
 | 400 | “Bad request” |	          
 | 404 | “Not found” |                    	
 | 500 | “Internal server error” |	    
