@@ -79,11 +79,13 @@ class StudentsApiController {
   $students = $this->model->getAll($column, $filtervalue, $orderBy, $order, $limit, $page);
 
    
-if($students)
- return $this->view->response($students, 200);
-else
-$this->view->response("No se encontraron estudiantes", 404);
+if($students){
+ $this->view->response($students, 200);
 }
+ else{
+  $this->view->response("No se encontraron estudiantes", 204);
+}
+      }
 catch (Exception $e) {
   $this->view->response($e->getMessage(), 500);
   }
@@ -125,8 +127,12 @@ else
  
  if (empty($student->ndni) || empty($student->nombre) || empty($student->direccion)|| empty($student->telefono)|| empty($student->curso)|| empty($student->division)) {
   $this->view->response("Los datos no se encuentran completos", 400);
-} else {
-if(empty($this->model->get($student->ndni))){
+} 
+else {
+  
+if(is_numeric($student->ndni)&& is_numeric($student->telefono)& is_numeric($student->curso)){
+
+    if(empty($this->model->get($student->ndni))){
   $this->model->insert($student->ndni, $student->nombre, $student->direccion,$student->telefono,$student->curso,$student->division);
   $added = $this->model->get($student->ndni);
   $this->view->response($added, 201);
@@ -136,7 +142,12 @@ else{
 }
 }
 
+else{
+  $this->view->response("El número de DNI, telefono y curso deben ser datos numéricos", 400);
+}
+
   }
+}
 
 
 public function editStudent($params = null){
@@ -144,24 +155,32 @@ public function editStudent($params = null){
   $student=$this->getData();
  
 if($this->model->get($id)){
-  if (empty($student->ndni) || empty($student->nombre) || empty($student->direccion)|| empty($student->telefono)|| empty($student->curso)|| empty($student->division)) {
-   $this->view->response("Los datos no se encuentran completos", 400);
- } 
- else {
- if( ($student->ndni) == $id || empty($this->model->get($student->ndni))){
-   $this->model->editar($id,$student->ndni, $student->nombre, $student->direccion,$student->telefono,$student->curso,$student->division);
-   $edit = $this->model->get($student->ndni);
-   $this->view->response($edit, 201);
- }
- else{
-  $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI indicado", 400);
- }
-}
-}
- else{
-   $this->view->response("No se encuentra un estudiante con el ndni indicado para editar", 400);
- }
+            if (empty($student->ndni) || empty($student->nombre) || empty($student->direccion)|| empty($student->telefono)|| empty($student->curso)|| empty($student->division)) {
+            $this->view->response("Los datos no se encuentran completos", 400);
+          } 
+          else {
+            if(is_numeric($student->ndni)&& is_numeric($student->telefono)& is_numeric($student->curso)){
+              if( ($student->ndni) == $id || empty($this->model->get($student->ndni))){
+                $this->model->editar($id,$student->ndni, $student->nombre, $student->direccion,$student->telefono,$student->curso,$student->division);
+                $edit = $this->model->get($student->ndni);
+                $this->view->response($edit, 201);
+              }
+              else{
+                $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI indicado", 400);
+              }
 
 
+          }
+          else{
+            $this->view->response("El número de DNI, telefono y curso deben ser datos numéricos", 400);
+          }
+          }
 }
+
+else{
+  $this->view->response("No se encuentra un estudiante con el ndni indicado para editar", 400);
+}
+}
+
+
 }
