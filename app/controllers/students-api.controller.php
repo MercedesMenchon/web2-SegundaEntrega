@@ -35,8 +35,8 @@ class StudentsApiController {
        die();
     }
     else{
-      if(isset($filtervalue)  && empty($filtervalue)) {
-    $this->view->response("Debe definir un valor para el filterValue", 400);
+      if(isset($column)  && empty($filtervalue)) {
+    $this->view->response("Debe definir un valor para el filtervalue", 400);
     die();
       }
     }
@@ -49,7 +49,7 @@ class StudentsApiController {
  
     $orders=["asc","desc"];
     if(isset($order) && !in_array(strtolower($order), $orders)){
-      $this->view->response("No se puede ordenar de laforma indicada", 400);
+      $this->view->response("No se puede ordenar de la forma indicada", 400);
       die();
     }
      if ((isset($page)) && (!is_numeric($page) || $page <= 0))  {
@@ -82,7 +82,7 @@ class StudentsApiController {
 if($students)
  return $this->view->response($students, 200);
 else
-$this->view->response("No es posible hacer realizar la busqueda", 404);
+$this->view->response("No se encontraron estudiantes", 404);
 }
 catch (Exception $e) {
   $this->view->response($e->getMessage(), 500);
@@ -132,7 +132,7 @@ if(empty($this->model->get($student->ndni))){
   $this->view->response($added, 201);
 }
 else{
-  $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI", 400);
+  $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI indicado", 400);
 }
 }
 
@@ -154,7 +154,7 @@ if($this->model->get($id)){
    $this->view->response($edit, 201);
  }
  else{
-  $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI", 400);
+  $this->view->response("Ya se encuentra ingresado un estudiante con el NDNI indicado", 400);
  }
 }
 }
