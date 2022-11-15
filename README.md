@@ -145,12 +145,14 @@ Se mostraran los estudiantes que en la columna curso indique 5.
 http://localhost/web2/TrabajoFinal-SegundaEntrega/api/students?column=curso&filtervalue=5
 
 
+## Respuestas
+Las respuestas con los que se puede encontrar en la API serán:
 
-## Errores
-Los errores con los que se puede encontrar en la API serán:
-
-| Status | Código de error |	
-|--------|--------------|                       
+| Status | Código |	
+|--------|--------------|      
+|200| | "OK"|
+|201| | "Created"|
+|204| "No content"|
 | 400 | “Bad request” |	          
 | 404 | “Not found” |                    	
 | 500 | “Internal server error” |	    
